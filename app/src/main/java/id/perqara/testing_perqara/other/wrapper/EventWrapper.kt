@@ -6,7 +6,6 @@ open class EventWrapper {
     object OnLoadingDissapear : EventWrapper()
     object OnPageFinished : EventWrapper()
     data class OnNetworkError(val page: String, val api: String) : EventWrapper()
-    object OnTickerError : EventWrapper()
     object OnFailed : EventWrapper()
     object OnSuccess : EventWrapper()
     object OnMultipleCallLoadingShow : EventWrapper()

@@ -1,17 +1,21 @@
 package id.perqara.testing_perqara.ui.home
 
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import id.perqara.testing_perqara.data.repository.games.GamesRepository
+import id.perqara.testing_perqara.other.base.BaseViewModel
 import id.perqara.testing_perqara.other.wrapper.EventWrapper
 import id.perqara.testing_perqara.other.wrapper.PagingRepositoryWrapper
+import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @Named("gamesRepository")
     private val gamesRepository: GamesRepository,
 ) : BaseViewModel() {
-    var gamesCurrentPage = 0
-    var gamesTotalPage = 10
+    var gamesCurrentPage = 1
+    var gamesNext = ""
     val stateLiveData = MutableLiveData<HomeState>()
 
     companion object {
@@ -32,23 +36,10 @@ class HomeViewModel @Inject constructor(
             is PagingRepositoryWrapper.Success -> {
                 stateLiveData.value = HomeState.LoadGames(
                     result.content,
-                    result.totalPage ?: 0,
-                    result.currentPage ?: 0
+                    result.next
                 )
-            }
-            is PagingRepositoryWrapper.AccountError -> {
-                val errorMessage =
-                    if (result.message.startsWith("crypto/rsa: verification error")
-                        || result.message.startsWith("Not Allowed")
-                        || result.message.startsWith("The resource owner or authorization server denied the request")
-                        || result.message.startsWith("Unauthenticated")
-                    ) {
-                        "Anda sudah Login dari lokasi lain.\n" +
-                                "Ketuk OK untuk kembali ke halaman Login"
-                    } else {
-                        result.message
-                    }
-                stateLiveData.value = HomeState.Logout(errorMessage)
+                gamesCurrentPage = page
+                gamesNext = result.next
             }
             is PagingRepositoryWrapper.GenericError -> {
                 stateLiveData.value = HomeState.MinorError(result.message ?: "")
@@ -58,17 +49,19 @@ class HomeViewModel @Inject constructor(
                 eventLiveData.value = EventWrapper.OnNetworkError("Games Page", "Games List")
             }
             is PagingRepositoryWrapper.ServerError -> {
-                stateLiveData.value =
-                    HomeState.MinorError(result.error ?: "Mohon maaf, telah terjadi kesalahan")
+                stateLiveData.value = HomeState.MinorError(result.error ?: "Mohon maaf, telah terjadi kesalahan")
             }
             is PagingRepositoryWrapper.UnknownError -> {
                 stateLiveData.value = HomeState.MinorError(result.errorMessage)
+            }
+            is PagingRepositoryWrapper.AccountError -> {
+                stateLiveData.value = HomeState.MinorError("Mohon maaf, telah terjadi kesalahan")
             }
         }
     }
 
     fun resetGamesPage() {
-        gamesCurrentPage = 0
-        gamesTotalPage = 10
+        gamesCurrentPage = 1
+        gamesNext = ""
     }
 }

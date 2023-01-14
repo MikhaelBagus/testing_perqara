@@ -2,10 +2,12 @@ package id.perqara.testing_perqara.data.repository.games
 
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.data.remote.endpoint.GamesService
+import id.perqara.testing_perqara.helpers.RemoteResultHelper
 import id.perqara.testing_perqara.other.wrapper.PagingRepositoryWrapper
-import id.perqara.testing_perqara.other.wrapper.RepositoryWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Named
 
 open class GamesRemoteDataSource @Inject constructor(
     @Named("gamesService") private val gamesService: GamesService,
@@ -34,17 +36,17 @@ open class GamesRemoteDataSource @Inject constructor(
     open suspend fun getGamesDetail(
         gamesId: Int,
         key: String
-    ): RepositoryWrapper<List<GamesModel>> {
+    ): GamesModel {
         return withContext(Dispatchers.IO) {
             try {
                 val response = gamesService.getGamesDetail(
                     gamesId,
                     key
                 ).execute()
-                RemoteResultHelper.processRemoteResponse(response)
+                response
             } catch (e: Exception) {
-                RemoteResultHelper.processRemoteException(e)
-            }
+                e
+            } as GamesModel
         }
     }
 }

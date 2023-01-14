@@ -1,15 +1,25 @@
 package id.perqara.testing_perqara.ui.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
+import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.FragmentHomeBinding
 import id.perqara.testing_perqara.other.adapter.GamesAdapter
+import id.perqara.testing_perqara.other.base.BaseFragment
+import id.perqara.testing_perqara.ui.games_detail.GamesDetailFragment
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(){
@@ -55,10 +65,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val totalItemCount = layoutManager.itemCount
                 val lastVisible = layoutManager.findLastVisibleItemPosition() + 1
-                if (totalItemCount - lastVisible <= 3 && homeViewModel.gamesCurrentPage < homeViewModel.gamesTotalPage) {
+                if (totalItemCount - lastVisible <= 3 && homeViewModel.gamesNext != "") {
                     homeViewModel.gamesCurrentPage += 1
                     lifecycleScope.launch {
-                        homeViewModel.getGamesList(homeViewModel.gamesCurrentPage)
+                        homeViewModel.getGamesList(homeViewModel.gamesCurrentPage, "")
                     }
                 }
             }
@@ -69,30 +79,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
         liveData.observe(viewLifecycleOwner) {
             when (it) {
                 is HomeState.LoadGames -> {
-                    loadGamesRecyclerData(it.currentPage, it.maxPage, it.data)
+                    loadGamesRecyclerData(it.data, it.next)
                 }
                 is HomeState.MinorError -> {
                     showAlertDialog(it.message) {
 
                     }
                 }
+                is HomeState.NetworkError -> {
+                    networkView.setOnRetryListener { _ ->
+                        networkView.goneView()
+                        reloadPageData()
+                    }
+                }
             }
         }
     }
 
-    private fun loadGamesRecyclerData(currentPage: Int, totalPage: Int, itemList: List<GamesModel>){
-        homeViewModel.gamesTotalPage = totalPage
-        homeViewModel.gamesCurrentPage = currentPage
+    private fun loadGamesRecyclerData(itemList: List<GamesModel>, next: String){
         if (homeViewModel.gamesCurrentPage <= 1) {
             gamesAdapter.setItemList(itemList)
             binding.recyclerViewGames.scrollToPosition(0)
         } else {
             gamesAdapter.addItemList(itemList)
         }
-    }
-
-    private fun onItemGamesClicked(item: GamesModel) {
-
     }
 
     private fun setupChildFragmentPopListener() {
@@ -111,12 +121,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
     private fun reloadPageData() {
         lifecycleScope.launch {
             homeViewModel.resetGamesPage()
-            homeViewModel.getGamesList(homeViewModel.gamesCurrentPage)
+            homeViewModel.getGamesList(homeViewModel.gamesCurrentPage, "")
         }
     }
 
     override fun onFragmentReappear() {
         super.onFragmentReappear()
         reloadPageData()
+    }
+
+    private fun onItemGamesClicked(item: GamesModel) {
+        val fragment = GamesDetailFragment()
+        fragment.arguments = bundleOf(
+            Pair("games_id", item.id)
+        )
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.fragment_container, fragment)
+        fragmentTransaction.addToBackStack("GamesDetailFragment")
+        fragmentTransaction.commit()
     }
 }

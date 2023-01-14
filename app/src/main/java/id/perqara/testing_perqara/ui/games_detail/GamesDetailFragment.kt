@@ -1,6 +1,5 @@
 package id.perqara.testing_perqara.ui.games_detail
 
-import android.content.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.FragmentGamesDetailBinding
 import id.perqara.testing_perqara.other.base.BaseFragment
@@ -51,7 +53,7 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
     }
 
     override fun getDataFromArgument(argument: Bundle) {
-        gamesDetailViewModel.gamesId = argument.getString("games_id", null)
+        gamesDetailViewModel.gamesId = argument.getInt("games_id", 0)
     }
 
     private fun observeState(liveData: MutableLiveData<GamesDetailState>) {
@@ -65,12 +67,39 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
 
                     }
                 }
+                is GamesDetailState.NetworkError -> {
+                    networkView.setOnRetryListener { _ ->
+                        networkView.goneView()
+                        loadPageData(gamesDetailViewModel.gamesId)
+                    }
+                }
             }
         }
     }
 
     private fun loadGamesDetail(item: GamesModel) {
+        binding.txtPublisher.text = item.publishers?.get(0)?.name ?: ""
+        binding.txtName.text = item.name
+        binding.txtReleased.text = item.released
+        binding.txtRating.text = item.rating.toString()
+        binding.txtPlaytime.text = item.playtime.toString()
+        binding.txtDescription.text = item.description
 
+        binding.progressBar.visibility = View.VISIBLE
+        if (item.background_image != null && item.background_image != "") {
+            Picasso.get().load(item.background_image).into(binding.imgBackground, object : Callback {
+                override fun onSuccess() {
+                    binding.progressBar.visibility = View.GONE
+                }
+
+                override fun onError(e: Exception) {
+                    binding.progressBar.visibility = View.GONE
+                }
+            })
+        }
+        else{
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun setupChildFragmentPopListener() {

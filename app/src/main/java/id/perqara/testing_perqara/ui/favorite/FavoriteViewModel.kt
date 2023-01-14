@@ -1,20 +1,22 @@
 package id.perqara.testing_perqara.ui.favorite
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import id.perqara.testing_perqara.data.repository.games.GamesRepository
+import id.perqara.testing_perqara.other.base.BaseViewModel
 import id.perqara.testing_perqara.other.wrapper.EventWrapper
 import id.perqara.testing_perqara.other.wrapper.PagingRepositoryWrapper
 import id.perqara.testing_perqara.ui.home.HomeState
+import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     @Named("gamesRepository")
     private val gamesRepository: GamesRepository,
 ) : BaseViewModel() {
-    var gamesCurrentPage = 0
-    var gamesTotalPage = 10
+    var gamesCurrentPage = 1
+    var gamesNext = ""
     val stateLiveData = MutableLiveData<FavoriteState>()
 
     companion object {
@@ -35,9 +37,10 @@ class FavoriteViewModel @Inject constructor(
             is PagingRepositoryWrapper.Success -> {
                 stateLiveData.value = FavoriteState.LoadGames(
                     result.content,
-                    result.totalPage ?: 0,
-                    result.currentPage ?: 0
+                    result.next
                 )
+                gamesCurrentPage = page
+                gamesNext = result.next
             }
             is PagingRepositoryWrapper.GenericError -> {
                 stateLiveData.value = FavoriteState.MinorError(result.message ?: "")
@@ -52,11 +55,14 @@ class FavoriteViewModel @Inject constructor(
             is PagingRepositoryWrapper.UnknownError -> {
                 stateLiveData.value = FavoriteState.MinorError(result.errorMessage)
             }
+            is PagingRepositoryWrapper.AccountError -> {
+                stateLiveData.value = FavoriteState.MinorError("Mohon maaf, telah terjadi kesalahan")
+            }
         }
     }
 
     fun resetGamesPage() {
-        gamesCurrentPage = 0
-        gamesTotalPage = 10
+        gamesCurrentPage = 1
+        gamesNext = ""
     }
 }

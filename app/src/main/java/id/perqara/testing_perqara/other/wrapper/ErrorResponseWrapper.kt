@@ -1,13 +1,10 @@
 package id.perqara.testing_perqara.other.wrapper
 
+import com.google.gson.annotations.SerializedName
+
 data class ErrorResponseWrapper(
     @SerializedName("error")
-    val error: Error? = null,
-){
-    data class Error(
-        @SerializedName("code")
-        val code: String? = null,
-        @SerializedName("message")
-        val message: String? = null,
-    )
-}
+    val error: Boolean? = null,
+    @SerializedName("message")
+    val message: String? = null,
+)

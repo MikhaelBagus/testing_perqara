@@ -1,6 +1,7 @@
 package id.perqara.testing_perqara.data.remote.retrofit
 
 import android.content.Context
+import retrofit2.Retrofit
 
 class BaseApi {
     companion object {
@@ -9,7 +10,7 @@ class BaseApi {
             if (INSTANCE != null) {
                 return INSTANCE!!
             }
-            INSTANCE = RetrofitInstance().createRetrofitInstanceGateway(
+            INSTANCE = RetrofitInstance().createRetrofitInstanceWithoutCertificate(
                 context,
                 "https://api.rawg.io/api/"
             )

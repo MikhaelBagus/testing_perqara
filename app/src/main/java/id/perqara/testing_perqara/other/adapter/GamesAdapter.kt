@@ -5,8 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 
 class GamesAdapter(
@@ -25,7 +29,25 @@ class GamesAdapter(
         holder.setIsRecyclable(false)
         val item = itemList[position]
         holder.apply {
-            txtTitle.text = item.title
+            txtName.text = item.name
+            txtReleased.text = item.released
+            txtRating.text = item.rating.toString()
+
+            progressBar.visibility = View.VISIBLE
+            if (item.background_image != null && item.background_image != "") {
+                Picasso.get().load(item.background_image).into(imgBackground, object : Callback {
+                    override fun onSuccess() {
+                        progressBar.visibility = View.GONE
+                    }
+
+                    override fun onError(e: Exception) {
+                        progressBar.visibility = View.GONE
+                    }
+                })
+            }
+            else{
+                progressBar.visibility = View.GONE
+            }
 
             layoutMain.setOnClickListener {
                 onItemGamesClicked(item)
@@ -49,7 +71,11 @@ class GamesAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtTitle: TextView = itemView.findViewById(R.id.txt_title)
+        val txtName: TextView = itemView.findViewById(R.id.txt_name)
+        val txtReleased: TextView = itemView.findViewById(R.id.txt_released)
+        val txtRating: TextView = itemView.findViewById(R.id.txt_rating)
+        val imgBackground: ImageView = itemView.findViewById(R.id.img_background)
+        val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
         val layoutMain: FrameLayout = itemView.findViewById(R.id.layout_main)
     }
 

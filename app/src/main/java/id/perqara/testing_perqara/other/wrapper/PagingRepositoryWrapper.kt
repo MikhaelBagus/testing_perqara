@@ -1,7 +1,7 @@
 package id.perqara.testing_perqara.other.wrapper
 
 sealed class PagingRepositoryWrapper<out T> {
-    data class Success<out T>(val content: T, val currentPage: Int?, val totalPage: Int?) : PagingRepositoryWrapper<T>()
+    data class Success<out T>(val content: T, val next: String) : PagingRepositoryWrapper<T>()
     data class GenericError(val code: Int? = null, val message: String? = null) :
         PagingRepositoryWrapper<Nothing>()
 

@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
+import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.FragmentFavoriteBinding
-import id.perqara.testing_perqara.databinding.FragmentHomeBinding
 import id.perqara.testing_perqara.other.adapter.GamesAdapter
-import id.perqara.testing_perqara.ui.home.HomeState
-import id.perqara.testing_perqara.ui.home.HomeViewModel
+import id.perqara.testing_perqara.other.base.BaseFragment
+import id.perqara.testing_perqara.ui.games_detail.GamesDetailFragment
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
@@ -61,10 +63,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val totalItemCount = layoutManager.itemCount
                 val lastVisible = layoutManager.findLastVisibleItemPosition() + 1
-                if (totalItemCount - lastVisible <= 3 && favoriteViewModel.gamesCurrentPage < favoriteViewModel.gamesTotalPage) {
+                if (totalItemCount - lastVisible <= 3 && favoriteViewModel.gamesNext != "") {
                     favoriteViewModel.gamesCurrentPage += 1
                     lifecycleScope.launch {
-                        favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage)
+                        favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
                     }
                 }
             }
@@ -75,30 +77,30 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         liveData.observe(viewLifecycleOwner) {
             when (it) {
                 is FavoriteState.LoadGames -> {
-                    loadGamesRecyclerData(it.currentPage, it.maxPage, it.data)
+                    loadGamesRecyclerData(it.data, it.next)
                 }
                 is FavoriteState.MinorError -> {
                     showAlertDialog(it.message) {
 
                     }
                 }
+                is FavoriteState.NetworkError -> {
+                    networkView.setOnRetryListener { _ ->
+                        networkView.goneView()
+                        reloadPageData()
+                    }
+                }
             }
         }
     }
 
-    private fun loadGamesRecyclerData(currentPage: Int, totalPage: Int, itemList: List<GamesModel>){
-        favoriteViewModel.gamesTotalPage = totalPage
-        favoriteViewModel.gamesCurrentPage = currentPage
+    private fun loadGamesRecyclerData(itemList: List<GamesModel>, next: String){
         if (favoriteViewModel.gamesCurrentPage <= 1) {
             gamesAdapter.setItemList(itemList)
             binding.recyclerViewGames.scrollToPosition(0)
         } else {
             gamesAdapter.addItemList(itemList)
         }
-    }
-
-    private fun onItemGamesClicked(item: GamesModel) {
-
     }
 
     private fun setupChildFragmentPopListener() {
@@ -117,12 +119,23 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     private fun reloadPageData() {
         lifecycleScope.launch {
             favoriteViewModel.resetGamesPage()
-            favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage)
+            favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
         }
     }
 
     override fun onFragmentReappear() {
         super.onFragmentReappear()
         reloadPageData()
+    }
+
+    private fun onItemGamesClicked(item: GamesModel) {
+        val fragment = GamesDetailFragment()
+        fragment.arguments = bundleOf(
+            Pair("games_id", item.id)
+        )
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.fragment_container, fragment)
+        fragmentTransaction.addToBackStack("GamesDetailFragment")
+        fragmentTransaction.commit()
     }
 }
