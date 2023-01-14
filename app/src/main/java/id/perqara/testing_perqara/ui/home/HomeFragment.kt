@@ -81,17 +81,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
                 is HomeState.LoadGames -> {
                     loadGamesRecyclerData(it.data)
                 }
-                is HomeState.MinorError -> {
-                    showAlertDialog(it.message) {
-
-                    }
-                }
-                is HomeState.NetworkError -> {
-                    networkView.setOnRetryListener { _ ->
-                        networkView.goneView()
-                        reloadPageData()
-                    }
-                }
             }
         }
     }

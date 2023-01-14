@@ -62,17 +62,6 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
                 is GamesDetailState.LoadGamesDetail -> {
                     loadGamesDetail(it.data)
                 }
-                is GamesDetailState.MinorError -> {
-                    showAlertDialog(it.message) {
-
-                    }
-                }
-                is GamesDetailState.NetworkError -> {
-                    networkView.setOnRetryListener { _ ->
-                        networkView.goneView()
-                        loadPageData(gamesDetailViewModel.gamesId)
-                    }
-                }
             }
         }
     }

@@ -79,17 +79,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
                 is FavoriteState.LoadGames -> {
                     loadGamesRecyclerData(it.data)
                 }
-                is FavoriteState.MinorError -> {
-                    showAlertDialog(it.message) {
-
-                    }
-                }
-                is FavoriteState.NetworkError -> {
-                    networkView.setOnRetryListener { _ ->
-                        networkView.goneView()
-                        reloadPageData()
-                    }
-                }
             }
         }
     }

@@ -1,7 +1,7 @@
 package id.perqara.testing_perqara.data.remote.endpoint
 
 import id.perqara.testing_perqara.data.model.GamesModel
-import id.perqara.testing_perqara.other.wrapper.PagingResponseWrapper
+import id.perqara.testing_perqara.data.model.WrapperListModel
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,7 +14,7 @@ interface GamesService {
         @Query("page_size") page_size: Int?,
         @Query("search") search: String?,
         @Query("key") key: String,
-    ): Call<PagingResponseWrapper<List<GamesModel>>>
+    ): Call<WrapperListModel>
 
     @GET("games/{games_id}")
     fun getGamesDetail(

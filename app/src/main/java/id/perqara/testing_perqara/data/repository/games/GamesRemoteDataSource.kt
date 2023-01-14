@@ -1,9 +1,8 @@
 package id.perqara.testing_perqara.data.repository.games
 
 import id.perqara.testing_perqara.data.model.GamesModel
+import id.perqara.testing_perqara.data.model.WrapperListModel
 import id.perqara.testing_perqara.data.remote.endpoint.GamesService
-import id.perqara.testing_perqara.helpers.RemoteResultHelper
-import id.perqara.testing_perqara.other.wrapper.PagingRepositoryWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,7 +16,7 @@ open class GamesRemoteDataSource @Inject constructor(
         page_size: Int?,
         search: String?,
         key: String,
-    ): PagingRepositoryWrapper<List<GamesModel>> {
+    ): WrapperListModel {
         return withContext(Dispatchers.IO) {
             try {
                 val response = gamesService.getGamesList(
@@ -26,10 +25,10 @@ open class GamesRemoteDataSource @Inject constructor(
                     search,
                     key,
                 ).execute()
-                RemoteResultHelper.processPagingRemoteResponse(response)
+                response
             } catch (e: Exception) {
-                RemoteResultHelper.processPagingRemoteException(e)
-            }
+                e
+            } as WrapperListModel
         }
     }
 
