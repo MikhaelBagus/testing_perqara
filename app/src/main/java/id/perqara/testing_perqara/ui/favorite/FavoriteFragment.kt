@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
@@ -72,6 +73,14 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
                     }
                 }
             }
+        })
+
+        binding.pullToRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            lifecycleScope.launch {
+                favoriteViewModel.resetGamesPage()
+                favoriteViewModel.getGamesList(1, "")
+            }
+            binding.pullToRefresh.isRefreshing = false
         })
     }
 

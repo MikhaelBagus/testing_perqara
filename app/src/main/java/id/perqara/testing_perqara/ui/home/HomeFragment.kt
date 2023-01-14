@@ -1,17 +1,20 @@
 package id.perqara.testing_perqara.ui.home
 
-import android.content.Intent
-import android.net.Uri
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import dagger.hilt.android.AndroidEntryPoint
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
@@ -70,10 +73,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
                 if (totalItemCount - lastVisible <= 3 && homeViewModel.gamesNext != "") {
                     homeViewModel.gamesCurrentPage += 1
                     lifecycleScope.launch {
-                        homeViewModel.getGamesList(homeViewModel.gamesCurrentPage, "")
+                        homeViewModel.getGamesList(homeViewModel.gamesCurrentPage, homeViewModel.gamesSearch)
                     }
                 }
             }
+        })
+
+        binding.txtInputSearch.setOnKeyListener(View.OnKeyListener { _, keyCode, event -> // If the event is a key-down event on the "enter" button
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                // Perform action on key press
+                lifecycleScope.launch {
+                    homeViewModel.resetGamesPage()
+                    homeViewModel.getGamesList(1, binding.txtInputSearch.text.toString())
+                }
+                return@OnKeyListener true
+            }
+            false
+        })
+
+        binding.pullToRefresh.setOnRefreshListener(OnRefreshListener {
+            binding.txtInputSearch.text.clear()
+            lifecycleScope.launch {
+                homeViewModel.resetGamesPage()
+                homeViewModel.getGamesList(1, "")
+            }
+            binding.pullToRefresh.isRefreshing = false
         })
     }
 

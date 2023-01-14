@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,6 +53,13 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
         }
         binding.toolbar.toolbarTitle.text = "Detail"
         binding.txtDescription.settings.javaScriptEnabled = true
+
+        binding.pullToRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            lifecycleScope.launch {
+                gamesDetailViewModel.getGamesDetail(gamesDetailViewModel.gamesId!!)
+            }
+            binding.pullToRefresh.isRefreshing = false
+        })
     }
 
     override fun getDataFromArgument(argument: Bundle) {

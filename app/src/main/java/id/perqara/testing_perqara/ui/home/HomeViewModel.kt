@@ -16,6 +16,7 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel() {
     var gamesCurrentPage = 1
     var gamesNext = ""
+    var gamesSearch = ""
     val stateLiveData = MutableLiveData<HomeState>()
 
     suspend fun getGamesList(page: Int, search: String?) {
@@ -36,6 +37,7 @@ class HomeViewModel @Inject constructor(
                 )
                 gamesCurrentPage = page
                 gamesNext = result.content.next.toString()
+                gamesSearch = search.toString()
             }
         }
     }
@@ -43,5 +45,6 @@ class HomeViewModel @Inject constructor(
     fun resetGamesPage() {
         gamesCurrentPage = 1
         gamesNext = ""
+        gamesSearch = ""
     }
 }
