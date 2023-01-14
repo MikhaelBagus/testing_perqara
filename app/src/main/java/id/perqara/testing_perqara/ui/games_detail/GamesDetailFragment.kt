@@ -60,6 +60,10 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
             }
             binding.pullToRefresh.isRefreshing = false
         })
+
+        binding.toolbar.layoutFavorite.setOnClickListener {
+
+        }
     }
 
     override fun getDataFromArgument(argument: Bundle) {

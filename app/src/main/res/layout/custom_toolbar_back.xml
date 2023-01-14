@@ -18,7 +18,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/toolbar_back_arrow"
+                android:id="@+id/img_back_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -40,6 +40,7 @@
             android:maxLines="1"/>
 
         <LinearLayout
+            android:id="@+id/layout_favorite"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="-60dp"
@@ -48,7 +49,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/toolbar_search"
+                android:id="@+id/img_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_favorite_black_24dp"
