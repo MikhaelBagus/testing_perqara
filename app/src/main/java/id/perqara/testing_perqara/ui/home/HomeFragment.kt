@@ -2,7 +2,6 @@ package id.perqara.testing_perqara.ui.home
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -79,9 +78,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
             }
         })
 
-        binding.txtInputSearch.setOnKeyListener(View.OnKeyListener { _, keyCode, event -> // If the event is a key-down event on the "enter" button
+        binding.imgSearch.setOnClickListener(View.OnClickListener {
+            binding.txtInputSearch.requestFocus()
+            if (activity != null) {
+                val imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+            }
+        })
+
+        binding.txtInputSearch.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                // Perform action on key press
                 lifecycleScope.launch {
                     homeViewModel.resetGamesPage()
                     homeViewModel.getGamesList(1, binding.txtInputSearch.text.toString())
