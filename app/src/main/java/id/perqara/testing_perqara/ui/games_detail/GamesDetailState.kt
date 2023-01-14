@@ -4,4 +4,6 @@ import id.perqara.testing_perqara.data.model.GamesModel
 
 open class GamesDetailState {
     data class LoadGamesDetail(val data: GamesModel) : GamesDetailState()
+    data class MinorError(val message: String) : GamesDetailState()
+    data class NetworkError (val errorType: String): GamesDetailState()
 }

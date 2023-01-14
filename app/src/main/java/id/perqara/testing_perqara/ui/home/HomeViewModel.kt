@@ -39,6 +39,19 @@ class HomeViewModel @Inject constructor(
                 gamesNext = result.content.next.toString()
                 gamesSearch = search.toString()
             }
+            is RepositoryWrapper.GenericError -> {
+                stateLiveData.value = HomeState.MinorError(result.message ?: "")
+            }
+            is RepositoryWrapper.NetworkError -> {
+                stateLiveData.value = HomeState.NetworkError("")
+                eventLiveData.value = EventWrapper.OnNetworkError("Home Page", "Home List")
+            }
+            is RepositoryWrapper.ServerError -> {
+                stateLiveData.value = HomeState.MinorError(result.error ?: "Mohon maaf, telah terjadi kesalahan")
+            }
+            is RepositoryWrapper.UnknownError -> {
+                stateLiveData.value = HomeState.MinorError(result.errorMessage)
+            }
         }
     }
 

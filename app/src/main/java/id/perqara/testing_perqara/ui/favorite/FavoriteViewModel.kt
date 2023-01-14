@@ -37,6 +37,19 @@ class FavoriteViewModel @Inject constructor(
                 gamesCurrentPage = page
                 gamesNext = result.content.next.toString()
             }
+            is RepositoryWrapper.GenericError -> {
+                stateLiveData.value = FavoriteState.MinorError(result.message ?: "")
+            }
+            is RepositoryWrapper.NetworkError -> {
+                stateLiveData.value = FavoriteState.NetworkError("")
+                eventLiveData.value = EventWrapper.OnNetworkError("Favorite Page", "Favorite List")
+            }
+            is RepositoryWrapper.ServerError -> {
+                stateLiveData.value = FavoriteState.MinorError(result.error ?: "Mohon maaf, telah terjadi kesalahan")
+            }
+            is RepositoryWrapper.UnknownError -> {
+                stateLiveData.value = FavoriteState.MinorError(result.errorMessage)
+            }
         }
     }
 

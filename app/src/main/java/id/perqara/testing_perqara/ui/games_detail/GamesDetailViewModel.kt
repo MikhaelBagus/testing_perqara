@@ -32,6 +32,19 @@ class GamesDetailViewModel @Inject constructor(
                 )
                 gamesModel = result.content
             }
+            is RepositoryWrapper.GenericError -> {
+                stateLiveData.value = GamesDetailState.MinorError(result.message ?: "")
+            }
+            is RepositoryWrapper.NetworkError -> {
+                stateLiveData.value = GamesDetailState.NetworkError("")
+                eventLiveData.value = EventWrapper.OnNetworkError("Games Detail Page", "Games Detail")
+            }
+            is RepositoryWrapper.ServerError -> {
+                stateLiveData.value = GamesDetailState.MinorError(result.error ?: "Mohon maaf, telah terjadi kesalahan")
+            }
+            is RepositoryWrapper.UnknownError -> {
+                stateLiveData.value = GamesDetailState.MinorError(result.errorMessage)
+            }
         }
     }
 }

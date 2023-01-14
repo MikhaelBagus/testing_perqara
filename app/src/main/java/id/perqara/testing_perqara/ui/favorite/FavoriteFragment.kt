@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,7 +17,6 @@ import id.perqara.testing_perqara.databinding.FragmentFavoriteBinding
 import id.perqara.testing_perqara.other.adapter.GamesAdapter
 import id.perqara.testing_perqara.other.base.BaseFragment
 import id.perqara.testing_perqara.ui.games_detail.GamesDetailFragment
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
@@ -90,6 +88,17 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
             when (it) {
                 is FavoriteState.LoadGames -> {
                     loadGamesRecyclerData(it.data)
+                }
+                is FavoriteState.MinorError -> {
+                    showAlertDialog(it.message) {
+
+                    }
+                }
+                is FavoriteState.NetworkError -> {
+                    networkView.setOnRetryListener { _ ->
+                        networkView.goneView()
+                        reloadPageData()
+                    }
                 }
             }
         }
