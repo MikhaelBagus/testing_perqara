@@ -44,6 +44,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         observeState(favoriteViewModel.stateLiveData)
         observeEvent(favoriteViewModel.eventLiveData)
         setupChildFragmentPopListener()
+        showBottomNavigation()
     }
 
     override fun setupView(binding: FragmentFavoriteBinding) {
@@ -126,6 +127,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     override fun onFragmentReappear() {
         super.onFragmentReappear()
         reloadPageData()
+        showBottomNavigation()
     }
 
     private fun onItemGamesClicked(item: GamesModel) {

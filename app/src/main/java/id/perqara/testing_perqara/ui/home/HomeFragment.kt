@@ -47,6 +47,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
         observeState(homeViewModel.stateLiveData)
         observeEvent(homeViewModel.eventLiveData)
         setupChildFragmentPopListener()
+        showBottomNavigation()
     }
 
     override fun setupView(binding: FragmentHomeBinding) {
@@ -149,6 +150,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
     override fun onFragmentReappear() {
         super.onFragmentReappear()
         reloadPageData()
+        showBottomNavigation()
     }
 
     private fun onItemGamesClicked(item: GamesModel) {
