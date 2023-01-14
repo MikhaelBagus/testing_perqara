@@ -6,6 +6,7 @@ import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.data.repository.games.GamesRepository
 import id.perqara.testing_perqara.other.base.BaseViewModel
 import id.perqara.testing_perqara.other.wrapper.EventWrapper
+import id.perqara.testing_perqara.other.wrapper.RepositoryWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,9 +25,13 @@ class GamesDetailViewModel @Inject constructor(
         val result = gamesRepository.getGamesDetail(gamesId, "51d0e291cbd842ebbe3c6f76b04d68d6")
         eventLiveData.value = EventWrapper.OnLoadingDissapear
 
-        stateLiveData.value = GamesDetailState.LoadGamesDetail(
-            result
-        )
-        gamesModel = result
+        when (result) {
+            is RepositoryWrapper.Success -> {
+                stateLiveData.value = GamesDetailState.LoadGamesDetail(
+                    result.content
+                )
+                gamesModel = result.content
+            }
+        }
     }
 }

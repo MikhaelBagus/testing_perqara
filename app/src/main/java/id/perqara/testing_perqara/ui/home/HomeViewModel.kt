@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import id.perqara.testing_perqara.data.repository.games.GamesRepository
 import id.perqara.testing_perqara.other.base.BaseViewModel
 import id.perqara.testing_perqara.other.wrapper.EventWrapper
+import id.perqara.testing_perqara.other.wrapper.RepositoryWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,12 +28,16 @@ class HomeViewModel @Inject constructor(
         )
         eventLiveData.value = EventWrapper.OnLoadingDissapear
 
-        stateLiveData.value = HomeState.LoadGames(
-            result.results.orEmpty(),
-            result.next.toString()
-        )
-        gamesCurrentPage = page
-        gamesNext = result.next.toString()
+        when (result) {
+            is RepositoryWrapper.Success -> {
+                stateLiveData.value = HomeState.LoadGames(
+                    result.content.results.orEmpty(),
+                    result.content.next.toString()
+                )
+                gamesCurrentPage = page
+                gamesNext = result.content.next.toString()
+            }
+        }
     }
 
     fun resetGamesPage() {

@@ -2,8 +2,7 @@ package id.perqara.testing_perqara.data.repository.games
 
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.data.model.WrapperListModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import id.perqara.testing_perqara.other.wrapper.RepositoryWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -15,20 +14,14 @@ open class GamesRepository @Inject constructor(
         page_size: Int?,
         search: String?,
         key: String
-    ): WrapperListModel {
-        return withContext(Dispatchers.IO) {
-            val remoteResult = gamesRemoteDataSource.getGamesList(page, page_size, search, key)
-            remoteResult
-        }
+    ): RepositoryWrapper<WrapperListModel> {
+        return gamesRemoteDataSource.getGamesList(page, page_size, search, key)
     }
 
     suspend fun getGamesDetail(
         gamesId: Int,
         key: String
-    ): GamesModel {
-        return withContext(Dispatchers.IO) {
-            val remoteResult = gamesRemoteDataSource.getGamesDetail(gamesId, key)
-            remoteResult
-        }
+    ): RepositoryWrapper<GamesModel> {
+        return gamesRemoteDataSource.getGamesDetail(gamesId, key)
     }
 }
