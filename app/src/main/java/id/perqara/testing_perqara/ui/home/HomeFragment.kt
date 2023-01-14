@@ -35,6 +35,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
         super.onCreate(savedInstanceState)
         gamesAdapter = GamesAdapter(
             mutableListOf(),
+            context!!,
             ::onItemGamesClicked,
         )
     }

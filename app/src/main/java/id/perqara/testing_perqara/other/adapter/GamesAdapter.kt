@@ -1,5 +1,6 @@
 package id.perqara.testing_perqara.other.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,13 +9,14 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 
 class GamesAdapter(
     private var itemList: MutableList<GamesModel>,
+    var context: Context,
     val onItemGamesClicked: (item: GamesModel) -> Unit,
 ) :
     RecyclerView.Adapter<GamesAdapter.ViewHolder>() {
@@ -33,20 +35,8 @@ class GamesAdapter(
             txtReleased.text = item.released
             txtRating.text = item.rating.toString()
 
-            progressBar.visibility = View.VISIBLE
             if (item.background_image != null && item.background_image != "") {
-                Picasso.get().load(item.background_image).into(imgBackground, object : Callback {
-                    override fun onSuccess() {
-                        progressBar.visibility = View.GONE
-                    }
-
-                    override fun onError(e: Exception) {
-                        progressBar.visibility = View.GONE
-                    }
-                })
-            }
-            else{
-                progressBar.visibility = View.GONE
+                Glide.with(context).load(item.background_image).into(imgBackground)
             }
 
             layoutMain.setOnClickListener {

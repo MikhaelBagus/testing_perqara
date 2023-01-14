@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -100,20 +101,8 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
             ""
         )
 
-        binding.progressBar.visibility = View.VISIBLE
         if (item.background_image != null && item.background_image != "") {
-            Picasso.get().load(item.background_image).into(binding.imgBackground, object : Callback {
-                override fun onSuccess() {
-                    binding.progressBar.visibility = View.GONE
-                }
-
-                override fun onError(e: Exception) {
-                    binding.progressBar.visibility = View.GONE
-                }
-            })
-        }
-        else{
-            binding.progressBar.visibility = View.GONE
+            Glide.with(requireContext()).load(item.background_image).into(binding.imgBackground)
         }
 
         dbHandler = DBHandler(context)

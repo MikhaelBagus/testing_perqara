@@ -31,6 +31,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         super.onCreate(savedInstanceState)
         gamesAdapter = GamesAdapter(
             mutableListOf(),
+            context!!,
             ::onItemGamesClicked,
         )
     }
