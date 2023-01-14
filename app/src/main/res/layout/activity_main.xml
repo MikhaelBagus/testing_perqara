@@ -25,6 +25,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
+        app:itemIconTint="@drawable/bnv_tab_item_foreground"
+        app:itemTextColor="@drawable/bnv_tab_item_foreground"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
