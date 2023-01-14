@@ -79,7 +79,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
         liveData.observe(viewLifecycleOwner) {
             when (it) {
                 is HomeState.LoadGames -> {
-                    loadGamesRecyclerData(it.data, it.next)
+                    loadGamesRecyclerData(it.data)
                 }
                 is HomeState.MinorError -> {
                     showAlertDialog(it.message) {
@@ -96,7 +96,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
         }
     }
 
-    private fun loadGamesRecyclerData(itemList: List<GamesModel>, next: String){
+    private fun loadGamesRecyclerData(itemList: List<GamesModel>){
         if (homeViewModel.gamesCurrentPage <= 1) {
             gamesAdapter.setItemList(itemList)
             binding.recyclerViewGames.scrollToPosition(0)

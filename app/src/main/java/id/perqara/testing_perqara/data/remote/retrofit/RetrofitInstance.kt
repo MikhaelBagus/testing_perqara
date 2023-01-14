@@ -1,6 +1,5 @@
 package id.perqara.testing_perqara.data.remote.retrofit
 
-import android.content.Context
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class RetrofitInstance {
-    fun createRetrofitInstanceWithoutCertificate(context: Context, baseUrl: String): Retrofit {
+    fun createRetrofitInstanceWithoutCertificate(baseUrl: String): Retrofit {
         val loggingInterceptor =
             HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
         val clientBuilder =

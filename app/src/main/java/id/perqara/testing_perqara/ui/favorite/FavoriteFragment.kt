@@ -77,7 +77,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         liveData.observe(viewLifecycleOwner) {
             when (it) {
                 is FavoriteState.LoadGames -> {
-                    loadGamesRecyclerData(it.data, it.next)
+                    loadGamesRecyclerData(it.data)
                 }
                 is FavoriteState.MinorError -> {
                     showAlertDialog(it.message) {
@@ -94,7 +94,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         }
     }
 
-    private fun loadGamesRecyclerData(itemList: List<GamesModel>, next: String){
+    private fun loadGamesRecyclerData(itemList: List<GamesModel>){
         if (favoriteViewModel.gamesCurrentPage <= 1) {
             gamesAdapter.setItemList(itemList)
             binding.recyclerViewGames.scrollToPosition(0)

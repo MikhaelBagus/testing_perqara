@@ -1,35 +1,41 @@
 package id.perqara.testing_perqara
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import id.perqara.testing_perqara.databinding.ActivityMainBinding
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import id.perqara.testing_perqara.ui.favorite.FavoriteFragment
+import id.perqara.testing_perqara.ui.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+    lateinit var bottomNav : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        loadFragment(HomeFragment())
+        bottomNav = findViewById<BottomNavigationView>(R.id.navigation)
+        bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.navigation_home -> {
+                    loadFragment(HomeFragment())
+                    true
+                }
+                R.id.navigation_favorite -> {
+                    loadFragment(FavoriteFragment())
+                    true
+                }
+                else -> {
+                    loadFragment(HomeFragment())
+                    true
+                }
+            }
+        }
+    }
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val navView: BottomNavigationView = binding.navigation
-
-        val navController = findNavController(R.id.fragment_container)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_favorite
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+    private  fun loadFragment(fragment: Fragment){
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container,fragment)
+        transaction.commit()
     }
 }

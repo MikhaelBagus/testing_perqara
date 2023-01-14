@@ -124,7 +124,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment(), IOnBackPressed {
         alertDialogBuilder.setMessage(message)
         alertDialogBuilder.setPositiveButton(
             "OK"
-        ) { dialogInterface: DialogInterface, i: Int ->
+        ) { dialogInterface: DialogInterface, _: Int ->
             onPositiveButtonClicked()
             dialogInterface.cancel()
         }

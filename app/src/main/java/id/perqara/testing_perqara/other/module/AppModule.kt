@@ -18,7 +18,7 @@ object AppModule {
     fun provideBaseApi(
         @ApplicationContext context: Context,
     ): Retrofit {
-        return BaseApi.getRetrofitInstance(context)
+        return BaseApi.getRetrofitInstance()
     }
 
 }
