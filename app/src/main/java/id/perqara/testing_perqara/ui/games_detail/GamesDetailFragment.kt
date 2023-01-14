@@ -9,8 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import id.perqara.testing_perqara.DBHandler
 import id.perqara.testing_perqara.R
