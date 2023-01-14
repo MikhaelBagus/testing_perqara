@@ -38,9 +38,9 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            favoriteViewModel.getGamesList(1,"")
-        }
+//        lifecycleScope.launch {
+//            favoriteViewModel.getGamesList(1,"")
+//        }
         observeState(favoriteViewModel.stateLiveData)
         observeEvent(favoriteViewModel.eventLiveData)
         setupChildFragmentPopListener()
@@ -69,18 +69,18 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
                 val lastVisible = layoutManager.findLastVisibleItemPosition() + 1
                 if (totalItemCount - lastVisible <= 3 && favoriteViewModel.gamesNext != "") {
                     favoriteViewModel.gamesCurrentPage += 1
-                    lifecycleScope.launch {
-                        favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
-                    }
+//                    lifecycleScope.launch {
+//                        favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
+//                    }
                 }
             }
         })
 
         binding.pullToRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-            lifecycleScope.launch {
-                favoriteViewModel.resetGamesPage()
-                favoriteViewModel.getGamesList(1, "")
-            }
+//            lifecycleScope.launch {
+//                favoriteViewModel.resetGamesPage()
+//                favoriteViewModel.getGamesList(1, "")
+//            }
             binding.pullToRefresh.isRefreshing = false
         })
     }
@@ -118,10 +118,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     }
 
     private fun reloadPageData() {
-        lifecycleScope.launch {
-            favoriteViewModel.resetGamesPage()
-            favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
-        }
+//        lifecycleScope.launch {
+//            favoriteViewModel.resetGamesPage()
+//            favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
+//        }
     }
 
     override fun onFragmentReappear() {
