@@ -11,6 +11,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import id.perqara.testing_perqara.DBHandler
+import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.FragmentGamesDetailBinding
 import id.perqara.testing_perqara.other.base.BaseFragment
@@ -24,10 +26,7 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
     private val gamesDetailViewModel by viewModels<GamesDetailViewModel>()
 
     private var backstackOldCount = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var dbHandler: DBHandler? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,10 +59,6 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
             }
             binding.pullToRefresh.isRefreshing = false
         })
-
-        binding.toolbar.layoutFavorite.setOnClickListener {
-
-        }
     }
 
     override fun getDataFromArgument(argument: Bundle) {
@@ -119,6 +114,25 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
         }
         else{
             binding.progressBar.visibility = View.GONE
+        }
+
+        dbHandler = DBHandler(context)
+        if(dbHandler!!.readDetailFavorite(item.id) == null){
+            binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp)
+        }
+        else{
+            binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_baseline_favorite_24)
+        }
+
+        binding.toolbar.layoutFavorite.setOnClickListener {
+            if(dbHandler!!.readDetailFavorite(item.id) == null){
+                dbHandler!!.addNewFavorite(item.id, item.name, item.description, item.released, item.background_image, item.rating, item.publishers!![0].name, item.playtime)
+                binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_baseline_favorite_24)
+            }
+            else{
+                dbHandler!!.deleteFavorite(item.id)
+                binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp)
+            }
         }
     }
 

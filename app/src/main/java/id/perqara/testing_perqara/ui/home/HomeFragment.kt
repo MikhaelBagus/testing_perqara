@@ -55,11 +55,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
 
         binding.toolbar.toolbarTitle.text = "Games For You"
 
-        binding.pullToRefresh.setOnRefreshListener {
-            reloadPageData()
-            binding.pullToRefresh.isRefreshing = false
-        }
-
         binding.recyclerViewGames.adapter = gamesAdapter
         binding.recyclerViewGames.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -154,7 +149,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
     private fun reloadPageData() {
         lifecycleScope.launch {
             homeViewModel.resetGamesPage()
-            homeViewModel.getGamesList(homeViewModel.gamesCurrentPage, "")
+            homeViewModel.getGamesList(homeViewModel.gamesCurrentPage, homeViewModel.gamesSearch)
         }
     }
 

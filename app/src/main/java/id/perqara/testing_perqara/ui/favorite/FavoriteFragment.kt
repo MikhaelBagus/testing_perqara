@@ -8,9 +8,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
+import id.perqara.testing_perqara.DBHandler
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.FragmentFavoriteBinding
@@ -24,6 +24,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         FragmentFavoriteBinding::inflate
     private val favoriteViewModel by viewModels<FavoriteViewModel>()
     private var backstackOldCount = 0
+    private var dbHandler: DBHandler? = null
     private lateinit var gamesAdapter: GamesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +37,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        lifecycleScope.launch {
-//            favoriteViewModel.getGamesList(1,"")
-//        }
+        dbHandler = DBHandler(context)
+        loadGamesRecyclerData(dbHandler!!.readFavorite())
         observeState(favoriteViewModel.stateLiveData)
         observeEvent(favoriteViewModel.eventLiveData)
         setupChildFragmentPopListener()
@@ -59,26 +59,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         binding.recyclerViewGames.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        binding.recyclerViewGames.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val totalItemCount = layoutManager.itemCount
-                val lastVisible = layoutManager.findLastVisibleItemPosition() + 1
-                if (totalItemCount - lastVisible <= 3 && favoriteViewModel.gamesNext != "") {
-                    favoriteViewModel.gamesCurrentPage += 1
-//                    lifecycleScope.launch {
-//                        favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
-//                    }
-                }
-            }
-        })
-
         binding.pullToRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-//            lifecycleScope.launch {
-//                favoriteViewModel.resetGamesPage()
-//                favoriteViewModel.getGamesList(1, "")
-//            }
+            reloadPageData()
             binding.pullToRefresh.isRefreshing = false
         })
     }
@@ -127,10 +109,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     }
 
     private fun reloadPageData() {
-//        lifecycleScope.launch {
-//            favoriteViewModel.resetGamesPage()
-//            favoriteViewModel.getGamesList(favoriteViewModel.gamesCurrentPage, "")
-//        }
+        dbHandler = DBHandler(context)
+        loadGamesRecyclerData(dbHandler!!.readFavorite())
     }
 
     override fun onFragmentReappear() {
