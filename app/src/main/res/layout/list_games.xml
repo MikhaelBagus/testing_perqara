@@ -10,7 +10,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         app:cardUseCompatPadding="true"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +41,7 @@
 
                         <ImageView
                             android:id="@+id/img_background"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
                         <ProgressBar
@@ -61,7 +61,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginHorizontal="5dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 

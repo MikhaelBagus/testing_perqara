@@ -48,6 +48,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     override fun setupView(binding: FragmentFavoriteBinding) {
         super.setupView(binding)
 
+        binding.toolbar.toolbarTitle.text = "Favorite Games"
+
         binding.pullToRefresh.setOnRefreshListener {
             reloadPageData()
             binding.pullToRefresh.isRefreshing = false

@@ -50,6 +50,8 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
         binding.toolbar.layoutBackArrow.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.toolbar.toolbarTitle.text = "Detail"
+        binding.txtDescription.settings.javaScriptEnabled = true
     }
 
     override fun getDataFromArgument(argument: Bundle) {
@@ -72,7 +74,13 @@ class GamesDetailFragment : BaseFragment<FragmentGamesDetailBinding>() {
         binding.txtReleased.text = item.released
         binding.txtRating.text = item.rating.toString()
         binding.txtPlaytime.text = item.playtime.toString()
-        binding.txtDescription.text = item.description
+        binding.txtDescription.loadDataWithBaseURL(
+            "",
+            item.description.toString(),
+            "text/html",
+            "UTF-8",
+            ""
+        )
 
         binding.progressBar.visibility = View.VISIBLE
         if (item.background_image != null && item.background_image != "") {

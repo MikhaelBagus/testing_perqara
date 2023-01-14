@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#022A5B</color>
+    <color name="colorPrimaryDark">#022A5B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTransparent">#00000000</color>
@@ -33,8 +33,8 @@
     <color name="gray_background2">#F5F5F5</color>
     <color name="purple_background">#7F2392</color>
 
-    <color name="colorHeading">#3592FF</color>
-    <color name="colorHeadingDark">#3592FF</color>
+    <color name="colorHeading">#022A5B</color>
+    <color name="colorHeadingDark">#022A5B</color>
     <color name="colorSearch">#F8F8F8</color>
     <color name="colorHr">#EFEDED</color>
     <color name="colorDate">#CBCBCB</color>

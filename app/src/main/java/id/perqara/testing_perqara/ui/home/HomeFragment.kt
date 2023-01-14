@@ -50,6 +50,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
     override fun setupView(binding: FragmentHomeBinding) {
         super.setupView(binding)
 
+        binding.toolbar.toolbarTitle.text = "Games For You"
+
         binding.pullToRefresh.setOnRefreshListener {
             reloadPageData()
             binding.pullToRefresh.isRefreshing = false
