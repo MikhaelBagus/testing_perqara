@@ -137,7 +137,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
         requireActivity().supportFragmentManager.addOnBackStackChangedListener {
             try {
                 if (requireActivity().supportFragmentManager.backStackEntryCount < backstackOldCount) {
-                    reloadPageData()
+//                    reloadPageData()
                 }
                 backstackOldCount = requireActivity().supportFragmentManager.backStackEntryCount
             } catch (e: Exception) {
@@ -155,7 +155,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(){
 
     override fun onFragmentReappear() {
         super.onFragmentReappear()
-        reloadPageData()
         showBottomNavigation()
     }
 
