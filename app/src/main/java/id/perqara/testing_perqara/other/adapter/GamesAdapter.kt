@@ -10,7 +10,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Callback
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 

@@ -1,49 +1,29 @@
 package id.perqara.testing_perqara.ui.games_detail
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.google.gson.Gson
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.data.repository.games.GamesRepository
 import id.perqara.testing_perqara.other.base.BaseViewModel
-import id.perqara.testing_perqara.other.wrapper.EventWrapper
-import id.perqara.testing_perqara.other.wrapper.RepositoryWrapper
-import javax.inject.Inject
-import javax.inject.Named
+import id.perqara.testing_perqara.other.base.Events
 
-@HiltViewModel
-class GamesDetailViewModel @Inject constructor(
-    @Named("gamesRepository")
-    private val gamesRepository: GamesRepository,
-) : BaseViewModel() {
-    val stateLiveData = MutableLiveData<GamesDetailState>()
+class GamesDetailViewModel(private val gamesRepository: GamesRepository) : BaseViewModel() {
     var gamesModel: GamesModel? = null
-
     var gamesId: Int? = 0
+    var dataGamesModel = MutableLiveData<GamesModel>()
 
-    suspend fun getGamesDetail(gamesId: Int) {
-        eventLiveData.value = EventWrapper.OnLoadingShow
-        val result = gamesRepository.getGamesDetail(gamesId, "51d0e291cbd842ebbe3c6f76b04d68d6")
-        eventLiveData.value = EventWrapper.OnLoadingDissapear
-
-        when (result) {
-            is RepositoryWrapper.Success -> {
-                stateLiveData.value = GamesDetailState.LoadGamesDetail(
-                    result.content
-                )
-                gamesModel = result.content
-            }
-            is RepositoryWrapper.GenericError -> {
-                stateLiveData.value = GamesDetailState.MinorError(result.message ?: "")
-            }
-            is RepositoryWrapper.NetworkError -> {
-                stateLiveData.value = GamesDetailState.NetworkError("")
-                eventLiveData.value = EventWrapper.OnNetworkError("Games Detail Page", "Games Detail")
-            }
-            is RepositoryWrapper.ServerError -> {
-                stateLiveData.value = GamesDetailState.MinorError(result.error ?: "Mohon maaf, telah terjadi kesalahan")
-            }
-            is RepositoryWrapper.UnknownError -> {
-                stateLiveData.value = GamesDetailState.MinorError(result.errorMessage)
+    fun getGamesDetail(gamesId: Int) {
+        event.value = Events(isLoading = true)
+        launch {
+            gamesRepository.getGamesDetail(gamesId,
+                "51d0e291cbd842ebbe3c6f76b04d68d6"
+            ) { isSuccess, messages, datas ->
+                Log.i("autolog", "datas: ${Gson().toJson(datas)}")
+                event.value = Events(isLoading = false, message = messages, isSuccess = isSuccess)
+                if (datas != null) {
+                    dataGamesModel.value = datas
+                }
             }
         }
     }

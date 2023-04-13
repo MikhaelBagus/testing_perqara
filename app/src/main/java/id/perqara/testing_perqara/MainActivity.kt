@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.hilt.android.AndroidEntryPoint
 import id.perqara.testing_perqara.ui.favorite.FavoriteFragment
 import id.perqara.testing_perqara.ui.home.HomeFragment
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNav : BottomNavigationView
     private var mainViewModel: MainViewModel? = null
