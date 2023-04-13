@@ -7,29 +7,30 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "games")
 class Games {
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null
+    var id: Int? = null
 
     @ColumnInfo(name = "id_games")
-    val id_games: Int? = null
+    var id_games: Int? = null
 
     @ColumnInfo(name = "name")
-    val name: String? = null
+    var name: String? = null
 
     @ColumnInfo(name = "description")
-    val description: String? = null
+    var description: String? = null
 
     @ColumnInfo(name = "released")
-    val released: String? = null
+    var released: String? = null
 
     @ColumnInfo(name = "background_image")
-    val background_image: String? = null
+    var background_image: String? = null
 
     @ColumnInfo(name = "rating")
-    val rating: Double? = null
+    var rating: Double? = null
 
     @ColumnInfo(name = "publishers_name")
-    val publishers_name: String? = null
+    var publishers_name: String? = null
 
     @ColumnInfo(name = "playtime")
-    val playtime: Int? = null
+    var playtime: Int? = null
 }
+
