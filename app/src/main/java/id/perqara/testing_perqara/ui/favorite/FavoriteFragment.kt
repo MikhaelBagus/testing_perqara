@@ -13,15 +13,18 @@ import id.perqara.testing_perqara.DBHandler
 import id.perqara.testing_perqara.MainActivity
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
+import id.perqara.testing_perqara.data.model.PublishersGamesModel
 import id.perqara.testing_perqara.databinding.FragmentFavoriteBinding
 import id.perqara.testing_perqara.other.adapter.GamesAdapter
 import id.perqara.testing_perqara.other.base.BaseFragment
+import id.perqara.testing_perqara.room.GamesDatabase
 import id.perqara.testing_perqara.ui.games_detail.GamesDetailActivity
 
 class FavoriteFragment : BaseFragment(){
     private lateinit var main: MainActivity
     private lateinit var binding: FragmentFavoriteBinding
     private var dbHandler: DBHandler? = null
+    private var appDb: GamesDatabase? = null
     private lateinit var gamesAdapter: GamesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +75,33 @@ class FavoriteFragment : BaseFragment(){
 
     private fun reloadPageData() {
         dbHandler = DBHandler(context)
-        loadGamesRecyclerData(dbHandler!!.readFavorite())
+        appDb = context?.let { GamesDatabase.getInstance(it) }
+//        loadGamesRecyclerData(dbHandler!!.readFavorite())
+
+        val gamesArrayList = ArrayList<GamesModel>()
+        for (games in appDb!!.gamesDao()!!.getGamesList) {
+            val publishersGamesArrayList = java.util.ArrayList<PublishersGamesModel>()
+            publishersGamesArrayList.add(
+                PublishersGamesModel(
+                    games.id,
+                    games.publishers_name
+                )
+            )
+
+            gamesArrayList.add(
+                GamesModel(
+                    games.id_games,
+                    games.name,
+                    games.description,
+                    games.released,
+                    games.background_image,
+                    games.rating,
+                    publishersGamesArrayList,
+                    games.playtime,
+                ))
+        }
+
+        loadGamesRecyclerData(gamesArrayList)
     }
 
     private fun onItemGamesClicked(item: GamesModel) {

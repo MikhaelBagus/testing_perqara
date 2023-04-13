@@ -9,12 +9,14 @@ import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.ActivityGamesDetailBinding
 import id.perqara.testing_perqara.other.base.BaseActivity
+import id.perqara.testing_perqara.room.GamesDatabase
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GamesDetailActivity : BaseActivity() {
     private lateinit var binding: ActivityGamesDetailBinding
     private val gamesDetailViewModel: GamesDetailViewModel by viewModel()
     private var dbHandler: DBHandler? = null
+    private var appDb: GamesDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,7 @@ class GamesDetailActivity : BaseActivity() {
         else{
             binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_baseline_favorite_24)
         }
+        appDb = GamesDatabase.getInstance(applicationContext)
 
         binding.toolbar.layoutFavorite.setOnClickListener {
             if(dbHandler!!.readDetailFavorite(item.id) == null){
