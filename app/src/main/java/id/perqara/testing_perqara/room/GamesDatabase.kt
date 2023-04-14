@@ -20,6 +20,7 @@ abstract class GamesDatabase : RoomDatabase() {
                     GamesDatabase::class.java, DB_NAME
                 )
                     .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
                     .build()
             }
             return instance

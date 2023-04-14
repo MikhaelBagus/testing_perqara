@@ -20,13 +20,11 @@ class GamesDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_games_detail)
-        if (savedInstanceState != null) {
-            gamesDetailViewModel.gamesId = savedInstanceState.getInt("games_id", 0)
-        }
         initView()
     }
 
     private fun initView(){
+        gamesDetailViewModel.gamesId = intent.getIntExtra("games_id",0)
         if (gamesDetailViewModel.gamesId != null) {
             gamesDetailViewModel.getGamesDetail(gamesDetailViewModel.gamesId!!)
             vmHandle()
@@ -80,7 +78,7 @@ class GamesDetailActivity : BaseActivity() {
             if(appDb?.gamesDao()?.getGamesDetail(item.id) == null){
                 var gamesData: Games? = null
                 gamesData = Games(
-                    null,
+                    item.id,
                     item.id,
                     item.name,
                     item.description,
@@ -96,7 +94,7 @@ class GamesDetailActivity : BaseActivity() {
             else{
                 var gamesData: Games? = null
                 gamesData = Games(
-                    null,
+                    item.id,
                     item.id,
                     item.name,
                     item.description,

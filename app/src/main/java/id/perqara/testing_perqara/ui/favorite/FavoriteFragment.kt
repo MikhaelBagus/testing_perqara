@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import id.perqara.testing_perqara.DBHandler
 import id.perqara.testing_perqara.MainActivity
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
@@ -23,7 +21,6 @@ import id.perqara.testing_perqara.ui.games_detail.GamesDetailActivity
 class FavoriteFragment : BaseFragment(){
     private lateinit var main: MainActivity
     private lateinit var binding: FragmentFavoriteBinding
-    private var dbHandler: DBHandler? = null
     private var appDb: GamesDatabase? = null
     private lateinit var gamesAdapter: GamesAdapter
 
@@ -48,8 +45,7 @@ class FavoriteFragment : BaseFragment(){
             requireContext(),
             ::onItemGamesClicked,
         )
-        dbHandler = DBHandler(context)
-        loadGamesRecyclerData(dbHandler!!.readFavorite())
+        reloadPageData()
 
         binding.toolbar.toolbarTitle.text = "Favorite Games"
 
@@ -61,11 +57,6 @@ class FavoriteFragment : BaseFragment(){
         binding.recyclerViewGames.adapter = gamesAdapter
         binding.recyclerViewGames.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
-        binding.pullToRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-            reloadPageData()
-            binding.pullToRefresh.isRefreshing = false
-        })
     }
 
     private fun loadGamesRecyclerData(itemList: List<GamesModel>){
@@ -74,9 +65,7 @@ class FavoriteFragment : BaseFragment(){
     }
 
     private fun reloadPageData() {
-        dbHandler = DBHandler(context)
         appDb = context?.let { GamesDatabase.getInstance(it) }
-//        loadGamesRecyclerData(dbHandler!!.readFavorite())
 
         val gamesArrayList = ArrayList<GamesModel>()
         for (games in appDb?.gamesDao()?.gamesList!!) {
