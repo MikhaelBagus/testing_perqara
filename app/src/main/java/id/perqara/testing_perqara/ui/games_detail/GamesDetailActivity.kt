@@ -4,18 +4,17 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import id.perqara.testing_perqara.DBHandler
 import id.perqara.testing_perqara.R
 import id.perqara.testing_perqara.data.model.GamesModel
 import id.perqara.testing_perqara.databinding.ActivityGamesDetailBinding
 import id.perqara.testing_perqara.other.base.BaseActivity
+import id.perqara.testing_perqara.room.Games
 import id.perqara.testing_perqara.room.GamesDatabase
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GamesDetailActivity : BaseActivity() {
     private lateinit var binding: ActivityGamesDetailBinding
     private val gamesDetailViewModel: GamesDetailViewModel by viewModel()
-    private var dbHandler: DBHandler? = null
     private var appDb: GamesDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,22 +68,45 @@ class GamesDetailActivity : BaseActivity() {
             Glide.with(applicationContext).load(item.background_image).into(binding.imgBackground)
         }
 
-        dbHandler = DBHandler(applicationContext)
-        if(dbHandler!!.readDetailFavorite(item.id) == null){
+        appDb = GamesDatabase.getInstance(applicationContext)
+        if(appDb?.gamesDao()?.getGamesDetail(item.id) == null){
             binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp)
         }
         else{
             binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_baseline_favorite_24)
         }
-        appDb = GamesDatabase.getInstance(applicationContext)
 
         binding.toolbar.layoutFavorite.setOnClickListener {
-            if(dbHandler!!.readDetailFavorite(item.id) == null){
-                dbHandler!!.addNewFavorite(item.id, item.name, item.description, item.released, item.background_image, item.rating, item.publishers!![0].name, item.playtime)
+            if(appDb?.gamesDao()?.getGamesDetail(item.id) == null){
+                var gamesData: Games? = null
+                gamesData = Games(
+                    null,
+                    item.id,
+                    item.name,
+                    item.description,
+                    item.released,
+                    item.background_image,
+                    item.rating,
+                    item.publishers!![0].name,
+                    item.playtime,
+                )
+                appDb?.gamesDao()?.insertGames(gamesData)
                 binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_baseline_favorite_24)
             }
             else{
-                dbHandler!!.deleteFavorite(item.id)
+                var gamesData: Games? = null
+                gamesData = Games(
+                    null,
+                    item.id,
+                    item.name,
+                    item.description,
+                    item.released,
+                    item.background_image,
+                    item.rating,
+                    item.publishers!![0].name,
+                    item.playtime,
+                )
+                appDb?.gamesDao()?.deleteGames(gamesData)
                 binding.toolbar.imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp)
             }
         }

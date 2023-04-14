@@ -79,25 +79,25 @@ class FavoriteFragment : BaseFragment(){
 //        loadGamesRecyclerData(dbHandler!!.readFavorite())
 
         val gamesArrayList = ArrayList<GamesModel>()
-        for (games in appDb!!.gamesDao()!!.getGamesList) {
+        for (games in appDb?.gamesDao()?.gamesList!!) {
             val publishersGamesArrayList = java.util.ArrayList<PublishersGamesModel>()
             publishersGamesArrayList.add(
                 PublishersGamesModel(
-                    games.id,
-                    games.publishers_name
+                    games?.id,
+                    games?.publishersName
                 )
             )
 
             gamesArrayList.add(
                 GamesModel(
-                    games.id_games,
-                    games.name,
-                    games.description,
-                    games.released,
-                    games.background_image,
-                    games.rating,
+                    games?.idGames,
+                    games?.name,
+                    games?.description,
+                    games?.released,
+                    games?.backgroundImage,
+                    games?.rating,
                     publishersGamesArrayList,
-                    games.playtime,
+                    games?.playtime,
                 ))
         }
 

@@ -5,32 +5,32 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "games")
-class Games {
+data class Games(
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
+    var id: Int? = null,
 
     @ColumnInfo(name = "id_games")
-    var id_games: Int? = null
+    var idGames: Int? = null,
 
     @ColumnInfo(name = "name")
-    var name: String? = null
+    var name: String? = null,
 
     @ColumnInfo(name = "description")
-    var description: String? = null
+    var description: String? = null,
 
     @ColumnInfo(name = "released")
-    var released: String? = null
+    var released: String? = null,
 
     @ColumnInfo(name = "background_image")
-    var background_image: String? = null
+    var backgroundImage: String? = null,
 
     @ColumnInfo(name = "rating")
-    var rating: Double? = null
+    var rating: Double? = null,
 
     @ColumnInfo(name = "publishers_name")
-    var publishers_name: String? = null
+    var publishersName: String? = null,
 
     @ColumnInfo(name = "playtime")
     var playtime: Int? = null
-}
+)
 

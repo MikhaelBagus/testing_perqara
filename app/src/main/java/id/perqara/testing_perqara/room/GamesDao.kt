@@ -5,14 +5,17 @@ import androidx.room.*
 @Dao
 interface GamesDao {
     @get:Query("Select * from games")
-    val getGamesList: List<Games>
+    val gamesList: List<Games?>?
+
+    @Query("Select * from games where id_games = :id_games")
+    fun getGamesDetail(id_games: Int?): Games?
 
     @Insert
-    fun insertGames(games: Games)
+    fun insertGames(games: Games?)
 
     @Update
-    fun updateGames(games: Games)
+    fun updateGames(games: Games?)
 
     @Delete
-    fun deleteGames(games: Games)
+    fun deleteGames(games: Games?)
 }
