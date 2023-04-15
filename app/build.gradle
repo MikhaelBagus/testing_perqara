@@ -126,8 +126,4 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'com.roger.gifloadinglibrary:gifloadinglibrary:1.1.1'
-
-
-
-
 }

@@ -11,13 +11,13 @@ interface GamesDao {
     fun getGamesDetail(id_games: Int?): Games?
 
     @Insert
-    fun insertGames(games: Games?)
+    fun insertGames(games: Games)
 
     @Update
-    fun updateGames(games: Games?)
+    fun updateGames(games: Games)
 
     @Delete
-    fun deleteGames(games: Games?)
+    fun deleteGames(games: Games)
 
     @Query("DELETE FROM games")
     fun deleteAll()
